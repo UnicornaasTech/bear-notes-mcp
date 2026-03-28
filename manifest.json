@@ -14,11 +14,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vasylenko/claude-desktop-extension-bear-notes"
+    "url": "https://github.com/vasylenko/bear-notes-mcp"
   },  
-  "homepage": "https://github.com/vasylenko/claude-desktop-extension-bear-notes",
-  "documentation": "https://github.com/vasylenko/claude-desktop-extension-bear-notes/blob/main/README.md",
-  "support": "https://github.com/vasylenko/claude-desktop-extension-bear-notes/issues",
+  "homepage": "https://github.com/vasylenko/bear-notes-mcp",
+  "documentation": "https://github.com/vasylenko/bear-notes-mcp/blob/main/README.md",
+  "support": "https://github.com/vasylenko/bear-notes-mcp/issues",
   "server": {
     "type": "node",
     "entry_point": "main.js",
