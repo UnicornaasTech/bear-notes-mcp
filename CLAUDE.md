@@ -56,6 +56,20 @@ You are world-class NodeJS developer, senior engineer with a vast experience in 
 
 2 - Bear database schema brief - .claude/contexts/BEAR_DATABASE_SCHEMA.md - use this when working with tasks related to database access as a starting point
 
+# Core Workflows
+
+## Release Process
+
+All releases go through these steps in order. See `Taskfile.yml` for the underlying commands.
+
+1. **`task docs:sync`** — sync manifest.json tools into README.md and docs/NPM.md
+2. **`task version VERSION=X.Y.Z -y`** — bump version in package.json, manifest.json, src/config.ts
+3. **Commit** all release prep files in a single commit: `chore: prepare release X.Y.Z`
+4. **`task push-release VERSION=X.Y.Z SHORT_DESCRIPTION="..." -y`** — creates release commit, tag, and pushes
+5. **Trigger release workflow** after CI passes: `gh workflow run release.yml --ref vX.Y.Z`
+
+The release workflow (`release.yml`) builds the `.mcpb` bundle, creates a GitHub Release, and publishes to npm with provenance.
+
 # MCP Guideline – Tool Documentation Best Practices
 ## Tool Description
 The description field should provide a concise, high-level explanation of what the tool accomplishes:
