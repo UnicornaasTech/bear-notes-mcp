@@ -350,7 +350,7 @@ server.registerTool(
   {
     title: 'Replace Note Content',
     description:
-      'Replace content in an existing Bear note — either the full body or a specific section. Requires content replacement to be enabled in extension settings. Use bear-search-notes first to get the note ID. To add text without replacing existing content use bear-add-text instead.',
+      'Replace content in an existing Bear note — either the full body or a specific section. Requires content replacement to be enabled in settings. Use bear-search-notes first to get the note ID. To add text without replacing existing content use bear-add-text instead.',
     inputSchema: {
       id: z
         .string()
@@ -388,7 +388,7 @@ server.registerTool(
     if (!ENABLE_CONTENT_REPLACEMENT) {
       return createToolResponse(`Content replacement is not enabled.
 
-To use replace mode, enable "Content Replacement" in the Bear Notes extension settings.`);
+To use replace mode, enable "Content Replacement" in the Bear Notes server settings.`);
     }
 
     if (scope === 'section' && !header) {
