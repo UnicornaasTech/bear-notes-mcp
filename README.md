@@ -30,7 +30,7 @@ Example prompts:
 - **Local-only** — no network calls, all data stays on your Mac
 
 > [!NOTE]
-> Complete privacy (except the data you send to your AI provider when using an AI assistant such as Claude, of course): this server makes no external connections. All processing happens locally on your Mac using Bear's own database and API. There is no extra telemetry, usage statistics or anything like that.
+> Complete privacy (except the data you send to your AI provider when using an AI assistant, of course): this server makes no external connections. All processing happens locally on your Mac using Bear's own database and API. There is no extra telemetry, usage statistics or anything like that.
 
 ## 📦 Installation
 

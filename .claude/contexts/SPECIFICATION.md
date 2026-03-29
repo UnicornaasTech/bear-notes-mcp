@@ -1,4 +1,4 @@
-# Project Specification: Bear Notes MCP Bundle
+# Project Specification: Bear Notes MCP Server
 
 ## What This Document Is For
 
