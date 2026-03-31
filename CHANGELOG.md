@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.9.0] - 2026-04-01
 
 ### Changed
 - **`bear-add-file` accepts `file_path` as alternative to `base64_content`** ([#88](https://github.com/vasylenko/bear-notes-mcp/issues/88)): When the file exists on disk, provide its path instead of base64-encoded content. The server reads and encodes the file internally, avoiding the cost of the LLM producing thousands of base64 output tokens. The `filename` parameter is auto-inferred from the path when omitted. The two input modes (`file_path` and `base64_content`) are mutually exclusive.
