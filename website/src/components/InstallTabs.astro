@@ -1,0 +1,137 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  group: string;
+}
+
+const { group } = Astro.props;
+const g = group;
+
+const cliTabs = [
+  { id: 'code', ...site.install.claudeCode },
+  { id: 'codex', ...site.install.codex },
+  { id: 'gemini', ...site.install.gemini },
+];
+---
+
+<div data-tab-group={g}>
+  <div class="flex flex-wrap gap-1 mb-1" role="tablist">
+    <button
+      role="tab"
+      id={`${g}-tab-desktop`}
+      aria-selected="true"
+      aria-controls={`${g}-panel-desktop`}
+      class="install-tab tab-active rounded-t-xl px-4 py-2 text-sm font-medium border-b-2 border-accent"
+      data-install-tab="desktop"
+    >
+      Claude Desktop
+    </button>
+    {cliTabs.map((tab) => (
+      <button
+        role="tab"
+        id={`${g}-tab-${tab.id}`}
+        aria-selected="false"
+        aria-controls={`${g}-panel-${tab.id}`}
+        class="install-tab rounded-t-xl px-4 py-2 text-sm font-medium text-text-muted border-b-2 border-transparent hover:text-text-secondary transition-colors"
+        data-install-tab={tab.id}
+      >
+        {tab.label}
+      </button>
+    ))}
+    <button
+      role="tab"
+      id={`${g}-tab-other`}
+      aria-selected="false"
+      aria-controls={`${g}-panel-other`}
+      class="install-tab rounded-t-xl px-4 py-2 text-sm font-medium text-text-muted border-b-2 border-transparent hover:text-text-secondary transition-colors"
+      data-install-tab="other"
+    >
+      Other
+    </button>
+  </div>
+
+  <div class="surface-card rounded-xl rounded-tl-none p-6">
+    <!-- Claude Desktop panel -->
+    <div id={`${g}-panel-desktop`} role="tabpanel" aria-labelledby={`${g}-tab-desktop`} class="install-panel">
+      <ol class="space-y-5 text-text-secondary">
+        <li class="flex gap-4">
+          <span class="flex-shrink-0 text-xl font-light text-accent/30" aria-hidden="true">1</span>
+          <span class="pt-0.5">Download the <a href={site.install.claudeDesktop.downloadUrl} class="text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent transition-colors" target="_blank" rel="noopener">.mcpb extension</a> from GitHub Releases</span>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex-shrink-0 text-xl font-light text-accent/30" aria-hidden="true">2</span>
+          <span class="pt-0.5">Double-click the file — Claude Desktop shows the install prompt</span>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex-shrink-0 text-xl font-light text-accent/30" aria-hidden="true">3</span>
+          <span class="pt-0.5">Done. Start asking Claude about your Bear notes.</span>
+        </li>
+      </ol>
+    </div>
+
+    <!-- CLI panels -->
+    {cliTabs.map((tab) => (
+      <div id={`${g}-panel-${tab.id}`} role="tabpanel" aria-labelledby={`${g}-tab-${tab.id}`} class="install-panel hidden">
+        <p class="text-text-secondary mb-4">Run this in your terminal:</p>
+        <div class="relative">
+          <pre class="rounded-lg code-surface px-4 py-3 pr-12 text-sm font-mono text-white/80 overflow-x-auto"><code>{tab.command}</code></pre>
+          <button
+            class="copy-btn absolute top-2.5 right-2.5 rounded-md p-1.5 text-text-muted hover:text-accent transition-colors"
+            data-copy={tab.command}
+            aria-label="Copy command"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 copy-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 check-icon hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    ))}
+
+    <!-- Other panel -->
+    <div id={`${g}-panel-other`} role="tabpanel" aria-labelledby={`${g}-tab-other`} class="install-panel hidden">
+      <p class="text-text-secondary mb-4">Add this to your MCP client configuration:</p>
+      <div class="relative">
+        <pre class="rounded-lg code-surface px-4 py-3 pr-12 text-sm font-mono text-white/80 overflow-x-auto"><code>{site.install.other.config}</code></pre>
+        <button
+          class="copy-btn absolute top-2.5 right-2.5 rounded-md p-1.5 text-text-muted hover:text-accent transition-colors"
+          data-copy={site.install.other.config}
+          aria-label="Copy config"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 copy-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 check-icon hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  document.querySelectorAll('[data-tab-group]').forEach((group) => {
+    group.querySelectorAll('.install-tab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.install-tab').forEach((b) => {
+          b.setAttribute('aria-selected', 'false');
+          b.classList.remove('tab-active', 'border-accent');
+          b.classList.add('text-text-muted', 'border-transparent');
+        });
+        btn.setAttribute('aria-selected', 'true');
+        btn.classList.remove('text-text-muted', 'border-transparent');
+        btn.classList.add('tab-active', 'border-accent');
+
+        group.querySelectorAll('.install-panel').forEach((p) => p.classList.add('hidden'));
+        const id = btn.getAttribute('aria-controls');
+        const panel = document.getElementById(id);
+        if (panel) panel.classList.remove('hidden');
+      });
+    });
+  });
+</script>

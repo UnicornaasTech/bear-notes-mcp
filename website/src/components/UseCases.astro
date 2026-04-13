@@ -1,0 +1,48 @@
+---
+const useCases = [
+  {
+    title: 'Knowledge search',
+    description: 'You wrote it down somewhere, months ago. Ask your AI to find it — across titles, content, and text Bear has indexed from attached images and PDFs.',
+    prompt: 'Search my Bear notes for meeting decisions about the redesign from last month',
+  },
+  {
+    title: 'Meeting notes',
+    description: 'Capture what was discussed, who agreed to what, and create follow-up tasks — all directly in Bear, organized with tags.',
+    prompt: 'Create a Bear note from our meeting summary and tag it #work/meetings',
+  },
+  {
+    title: 'Research & writing',
+    description: 'Pull together scattered notes into an outline. Restructure a draft. Let your AI read what you\'ve already written and help shape it.',
+    prompt: 'Help me restructure the outline in my \'Product Launch\' note',
+  },
+  {
+    title: 'Content creation',
+    description: 'Turn your notes into blog posts, newsletters, or documentation. Your AI reads your source material and drafts from what you\'ve already captured.',
+    prompt: 'Find my research notes on MCP servers and draft a blog post outline',
+  },
+];
+---
+
+<section class="py-14 sm:py-20">
+  <div class="text-center max-w-2xl mx-auto mb-12">
+    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+      What you can do
+    </h2>
+    <p class="mt-4 text-text-secondary leading-relaxed">
+      Real things people do when their notes are one prompt away.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto stagger">
+    {useCases.map((uc) => (
+      <div class="surface-card p-6 animate-on-scroll flex flex-col">
+        <h3 class="font-bold text-text-primary mb-2">{uc.title}</h3>
+        <p class="text-sm text-text-secondary leading-relaxed mb-4">{uc.description}</p>
+        <div class="mt-auto code-surface rounded-lg px-4 py-3 text-sm">
+          <span class="text-white/40 select-none">&gt; </span>
+          <span class="text-white/80 italic">{uc.prompt}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

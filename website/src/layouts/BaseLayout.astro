@@ -1,0 +1,105 @@
+---
+import { site } from '../data/site';
+import '../styles/global.css';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = site.title,
+  description = site.description,
+} = Astro.props;
+
+const pageTitle = title === site.title
+  ? `${site.title} — ${site.tagline}`
+  : `${title} | ${site.title}`;
+
+const canonicalUrl = new URL(Astro.url.pathname, site.url);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'bear-notes-mcp',
+  description: site.description,
+  url: site.url,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'macOS',
+  license: 'https://opensource.org/licenses/MIT',
+  author: {
+    '@type': 'Person',
+    name: site.author.name,
+    url: site.author.url,
+  },
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  codeRepository: site.links.github,
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={`${site.url}${site.ogImage}`} />
+    <meta property="og:site_name" content={site.title} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${site.url}${site.ogImage}`} />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body class="bg-surface-0 text-text-primary min-h-screen antialiased selection:bg-accent/10 selection:text-accent">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-accent focus:rounded-lg focus:shadow-md">
+      Skip to content
+    </a>
+    <main id="main-content">
+      <slot />
+    </main>
+    <div class="border-t border-border">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <Footer />
+      </div>
+    </div>
+    <script is:inline>
+      document.querySelectorAll('.copy-btn').forEach((btn) => {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = 'true';
+        btn.addEventListener('click', async () => {
+          const text = btn.dataset.copy;
+          if (!text) return;
+          await navigator.clipboard.writeText(text);
+          const copyIcon = btn.querySelector('.copy-icon');
+          const checkIcon = btn.querySelector('.check-icon');
+          copyIcon.classList.add('hidden');
+          checkIcon.classList.remove('hidden');
+          setTimeout(() => {
+            copyIcon.classList.remove('hidden');
+            checkIcon.classList.add('hidden');
+          }, 2000);
+        });
+      });
+    </script>
+  </body>
+</html>

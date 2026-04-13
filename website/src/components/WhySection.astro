@@ -1,0 +1,56 @@
+---
+const items = [
+  {
+    title: 'Local-only',
+    description: 'No telemetry, no third-party services, no accounts to create. Your notes go from Bear to your AI assistant and nowhere else.',
+  },
+  {
+    title: 'Real-time',
+    description: 'No sync step, no stale data. Your AI sees notes exactly as they are right now.',
+  },
+  {
+    title: 'Any MCP client',
+    description: 'Works with Claude, Codex, Gemini, Cursor, Windsurf — not locked to one tool.',
+  },
+  {
+    title: 'Full editing',
+    description: 'Section-level add, replace, and append — not just read-only.',
+  },
+  {
+    title: 'OCR search',
+    description: 'Searches text that Bear has indexed from attached images and PDFs.',
+  },
+  {
+    title: 'Safety-first',
+    description: 'No delete tool. Content replacement is opt-in. Pre-flight validation on every write.',
+  },
+  {
+    title: 'Supply chain clean',
+    description: 'Native Node.js SQLite — no unsigned third-party binaries, no Gatekeeper blocks.',
+  },
+  {
+    title: 'Open source',
+    description: 'MIT licensed. Read every line, contribute, or fork.',
+  },
+];
+---
+
+<section class="py-14 sm:py-20">
+  <div class="max-w-2xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-center">
+      How it works
+    </h2>
+    <p class="mt-4 text-text-secondary leading-relaxed text-center mb-12">
+      What makes this different from other Bear integrations out there.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 stagger">
+      {items.map((item) => (
+        <div class="animate-on-scroll">
+          <h3 class="text-sm font-bold text-text-primary">{item.title}</h3>
+          <p class="text-sm text-text-secondary leading-relaxed mt-1">{item.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

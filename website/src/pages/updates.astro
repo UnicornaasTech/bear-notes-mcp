@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+
+const cx = 'mx-auto max-w-5xl px-4 sm:px-6 lg:px-8';
+---
+
+<BaseLayout
+  title="How to Update"
+  description="How to receive updates and upgrade bear-notes-mcp to the latest version."
+>
+  <div class={cx}>
+    <section class="pt-20 pb-16 sm:pt-28 sm:pb-20">
+      <div class="max-w-2xl mx-auto">
+        <a href="/" class="text-sm text-text-muted hover:text-text-primary transition-colors mb-8 inline-block">&larr; Back to home</a>
+
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">
+          How to Update
+        </h1>
+        <p class="mt-4 text-text-secondary leading-relaxed">
+          How to receive updates and upgrade bear-notes-mcp to the latest version.
+        </p>
+
+        <!-- Fill in update instructions below -->
+        <div class="mt-12 space-y-10 text-text-secondary leading-relaxed">
+
+          <div>
+            <h2 class="text-xl font-semibold text-text-primary mb-3">Claude Desktop Extension</h2>
+            <p>
+              Download the latest <code>.mcpb</code> file from the
+              <a href={site.links.releases} class="text-accent hover:underline">GitHub Releases page</a>.
+              Double-click the file — Claude Desktop will prompt you to install.
+              The new version replaces the previous one automatically.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="text-xl font-semibold text-text-primary mb-3">Claude Code / Codex / Gemini CLI</h2>
+            <p>
+              If your configuration uses <code>npx -y bear-notes-mcp@latest</code>, you're already set — npx fetches the latest version from npm every time the server starts. No manual update needed.
+            </p>
+            <p class="mt-2">
+              To check which version is running, ask your AI assistant: "What version of bear-notes-mcp are you using?"
+            </p>
+          </div>
+
+          <div>
+            <h2 class="text-xl font-semibold text-text-primary mb-3">Other MCP Clients</h2>
+            <p>
+              Same as above — if your MCP client configuration uses <code>npx -y bear-notes-mcp@latest</code>, updates happen automatically on each server start.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="text-xl font-semibold text-text-primary mb-3">Stay Notified</h2>
+            <p>
+              To get notified about new releases, go to the
+              <a href={site.links.github} class="text-accent hover:underline">GitHub repository</a>,
+              click <strong>Watch</strong> → <strong>Custom</strong> → check <strong>Releases</strong> → <strong>Apply</strong>.
+              You'll receive a GitHub notification (and email, if configured) whenever a new version is published.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+</BaseLayout>

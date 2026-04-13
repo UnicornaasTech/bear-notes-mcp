@@ -8,6 +8,7 @@ build/**
 dist/**
 .DS_Store
 *.dxt
+.astro/
 ####
 
 # Logs

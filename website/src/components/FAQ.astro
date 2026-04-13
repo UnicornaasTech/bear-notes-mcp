@@ -1,0 +1,72 @@
+---
+const faqs = [
+  {
+    question: 'Is my data safe?',
+    answer: 'The MCP server itself runs locally, makes no network calls, and collects no telemetry. However, your AI client (Claude, Cursor, etc.) sends note content to its API for inference — that\'s how AI assistants work. The server doesn\'t add any data exposure beyond what you\'d get by pasting a note into the chat yourself.',
+  },
+  {
+    question: 'What does the red warning about "access to everything on your computer" mean?',
+    answer: 'Claude Desktop\'s permission warning system doesn\'t distinguish between accessing a single file and accessing everything. The extension only needs one file: Bear\'s SQLite database. You can verify this yourself — the source code is fully open.',
+  },
+  {
+    question: 'Does it work with AI assistants other than Claude?',
+    answer: 'Yes. It works as a standalone MCP server with any MCP-compatible client — Claude Code, Cursor, Codex, Windsurf, Gemini CLI, and others. The Claude Desktop extension (.mcpb) is Claude-specific, but the npm package works everywhere.',
+  },
+  {
+    question: 'What are the requirements?',
+    answer: 'macOS only, since Bear is a macOS app. For the Claude Desktop extension, you just need Bear and Claude Desktop installed. For standalone npm usage, you also need Node.js 24.13.0 or later.',
+  },
+  {
+    question: 'Can it search inside images and PDFs attached to notes?',
+    answer: 'Yes. Bear indexes text from attached images and PDFs via OCR. The MCP server searches that indexed text — it doesn\'t perform OCR itself.',
+  },
+  {
+    question: 'Can it modify or delete my notes?',
+    answer: 'It can create notes, add text, and manage tags out of the box. The text replacement tool (bear-replace-text) is opt-in and disabled by default — you must explicitly enable it in settings, since replacement is a destructive operation.',
+  },
+  {
+    question: 'Why does it read the database directly instead of using Bear\'s URL API?',
+    answer: 'Bear\'s x-callback-url API returns data in x-success responses, which requires a server or binary to handle — that\'s fragile and introduces security concerns. Direct read-only SQLite access is simpler and more reliable.',
+  },
+  {
+    question: 'How can I report a bug or contribute?',
+    answer: 'Open an issue or start a discussion on the GitHub repository. Bug reports, feature requests, and pull requests are all welcome.',
+  },
+  {
+    question: 'Are you affiliated with Bear? Why are you doing this?',
+    answer: 'Because I can 😀 and I am not affiliated with Bear development team. I am a regular user of Bear notes just like you and want to have it in my AI tools.',
+  },  
+];
+---
+
+<section class="py-14 sm:py-20">
+  <div class="max-w-2xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-center mb-12">
+      FAQ
+    </h2>
+
+    <div class="space-y-3">
+      {faqs.map((faq) => (
+        <details class="group surface-card rounded-xl">
+          <summary class="flex cursor-pointer items-center justify-between px-6 py-5 font-medium text-text-primary select-none text-sm">
+            {faq.question}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4 flex-shrink-0 text-text-muted transition-transform duration-300 group-open:rotate-180"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </summary>
+          <div class="px-6 pb-5 text-sm text-text-secondary leading-relaxed">
+            {faq.answer}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
