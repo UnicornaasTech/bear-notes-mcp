@@ -20,6 +20,9 @@ const TITLE_EXACT = title('Exact');
 const TITLE_NESTED = title('Nested');
 const TITLE_SIMILAR = title('Similar');
 const TITLE_UNTAGGED = title('Untagged');
+// Tag with a space exercises decodeTagName() — Bear stores it as "+"-encoded in ZTITLE
+const TAG_SPACED = `stest67 spaced ${RUN_ID}`;
+const TITLE_SPACED = title('Spaced');
 
 const noteIds: string[] = [];
 
@@ -36,6 +39,10 @@ beforeAll(() => {
     callTool({ toolName: 'bear-create-note', args: { title: noteTitle, tags: tag } });
     noteIds.push(findNoteId(noteTitle));
   }
+
+  // Note with space-containing tag to exercise decodeTagName()
+  callTool({ toolName: 'bear-create-note', args: { title: TITLE_SPACED, tags: TAG_SPACED } });
+  noteIds.push(findNoteId(TITLE_SPACED));
 
   // Untagged note for verifying Tags: line absence
   callTool({ toolName: 'bear-create-note', args: { title: TITLE_UNTAGGED, text: 'No tags here' } });
@@ -112,6 +119,17 @@ describe('tag search via MCP Inspector CLI', () => {
     expect(result).toContain('Tags:');
     expect(result).toContain(TAG_BASE);
     expect(result).toContain(TAG_NESTED);
+  });
+
+  it('tags with spaces are decoded from Bear internal encoding', () => {
+    const result = callTool({
+      toolName: 'bear-search-notes',
+      args: { term: TITLE_SPACED },
+    }).content[0].text;
+
+    // Bear stores spaces as "+" in ZTITLE — decodeTagName() must convert back
+    expect(result).toContain(TAG_SPACED);
+    expect(result).not.toContain('+');
   });
 
   it('untagged notes omit the Tags line in search results', () => {
