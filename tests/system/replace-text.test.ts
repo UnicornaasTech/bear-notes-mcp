@@ -193,13 +193,14 @@ describe('bear-replace-text via MCP Inspector CLI', () => {
 
       noteId = findNoteId(title);
 
-      const result = callTool({
+      const response = callTool({
         toolName: 'bear-replace-text',
         args: { id: noteId, scope: 'section', text: 'new content', header: 'NonExistentSection' },
         env: { UI_ENABLE_CONTENT_REPLACEMENT: 'true' },
-      }).content[0].text;
+      });
 
-      expect(result).toContain('"NonExistentSection" not found');
+      expect(response.content[0].text).toContain('"NonExistentSection" not found');
+      expect(response.isError).toBe(true);
     } finally {
       if (noteId) trashNote(noteId);
     }
