@@ -19,6 +19,7 @@ function title(label: string): string {
 const TITLE_EXACT = title('Exact');
 const TITLE_NESTED = title('Nested');
 const TITLE_SIMILAR = title('Similar');
+const TITLE_UNTAGGED = title('Untagged');
 
 const noteIds: string[] = [];
 
@@ -35,6 +36,10 @@ beforeAll(() => {
     callTool({ toolName: 'bear-create-note', args: { title: noteTitle, tags: tag } });
     noteIds.push(findNoteId(noteTitle));
   }
+
+  // Untagged note for verifying Tags: line absence
+  callTool({ toolName: 'bear-create-note', args: { title: TITLE_UNTAGGED, text: 'No tags here' } });
+  noteIds.push(findNoteId(TITLE_UNTAGGED));
 });
 
 afterAll(() => {
@@ -107,5 +112,15 @@ describe('tag search via MCP Inspector CLI', () => {
     expect(result).toContain('Tags:');
     expect(result).toContain(TAG_BASE);
     expect(result).toContain(TAG_NESTED);
+  });
+
+  it('untagged notes omit the Tags line in search results', () => {
+    const result = callTool({
+      toolName: 'bear-search-notes',
+      args: { term: TITLE_UNTAGGED },
+    }).content[0].text;
+
+    expect(result).toContain(TITLE_UNTAGGED);
+    expect(result).not.toContain('Tags:');
   });
 });
