@@ -226,7 +226,7 @@ server.registerTool(
   {
     title: 'Find Bear Notes',
     description:
-      'Find notes in your Bear library by searching text content, filtering by tags, or date ranges. Always searches within attached images and PDF files via OCR. Returns a list with titles and IDs - use "Open Bear Note" to read full content.',
+      'Find notes in your Bear library by searching text content, filtering by tags, or date ranges. Always searches within attached images and PDF files via OCR. Returns a list with titles, tags, and IDs - use "Open Bear Note" to read full content.',
     inputSchema: {
       term: z.string().trim().optional().describe('Text to search for in note titles and content'),
       tag: z.string().trim().optional().describe('Tag to filter notes by (without # symbol)'),
@@ -329,6 +329,9 @@ Try different search criteria or check if notes exist in Bear Notes.`);
         resultLines.push(`${index + 1}. **${noteTitle}**`);
         resultLines.push(`   Created: ${createdDate}`);
         resultLines.push(`   Modified: ${modifiedDate}`);
+        if (note.tags && note.tags.length > 0) {
+          resultLines.push(`   Tags: ${note.tags.join(', ')}`);
+        }
         resultLines.push(`   ID: ${note.identifier}`);
         resultLines.push('');
       });
