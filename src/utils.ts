@@ -169,16 +169,7 @@ export function createToolResponse(text: string): Pick<CallToolResult, 'content'
  * @returns Formatted CallToolResult with isError: true
  */
 export function createErrorResponse(text: string): Pick<CallToolResult, 'content' | 'isError'> {
-  return {
-    content: [
-      {
-        type: 'text' as const,
-        text,
-        annotations: { audience: ['user', 'assistant'] as const },
-      },
-    ],
-    isError: true,
-  };
+  return { ...createToolResponse(text), isError: true };
 }
 
 /**
