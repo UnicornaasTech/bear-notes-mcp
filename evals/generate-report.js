@@ -21,8 +21,9 @@ for (const r of evalResults.results) {
   if (!providers.has(label)) providers.set(label, []);
 
   providers.get(label).push({
-    toolCalls: r.namedScores?.toolCalls ?? r.namedScores?.mcpCalls ?? r.namedScores?.openNoteCalls ?? 0,
+    toolCalls: r.namedScores?.toolCalls ?? r.namedScores?.mcpCalls ?? 0,
     turns: r.namedScores?.turns ?? 0,
+    quality: r.namedScores?.Quality ?? null,
     cost: r.cost ?? 0,
     pass: r.success ?? false,
   });
@@ -30,8 +31,9 @@ for (const r of evalResults.results) {
 
 function stats(runs, key) {
   const values = runs.map(r => r[key]);
-  const mean = values.reduce((a, b) => a + b, 0) / values.length;
-  return { mean, min: Math.min(...values), max: Math.max(...values), values };
+  const valid = values.filter(v => v !== null);
+  const mean = valid.length > 0 ? valid.reduce((a, b) => a + b, 0) / valid.length : null;
+  return { mean, min: valid.length > 0 ? Math.min(...valid) : null, max: valid.length > 0 ? Math.max(...valid) : null, values };
 }
 
 const providerNames = [...providers.keys()];
@@ -44,6 +46,7 @@ for (const [name, runs] of providers) {
     passRate: `${passCount}/${runs.length}`,
     toolCalls: stats(runs, 'toolCalls'),
     turns: stats(runs, 'turns'),
+    quality: stats(runs, 'quality'),
     cost: stats(runs, 'cost'),
   });
 }
@@ -51,26 +54,29 @@ for (const [name, runs] of providers) {
 const COLORS = ['#d97753', '#3a8f7f'];
 
 const metrics = [
+  { key: 'quality', label: 'Answer quality', tag: 'baseline', unit: '', decimals: 0, fixedMax: 10, description: 'LLM-graded response quality (0/5/10 scale)' },
   { key: 'toolCalls', label: 'bear-notes-mcp tool calls', tag: 'efficiency', unit: '', decimals: 0, description: 'Total calls to the bear-notes-mcp server (excludes SDK-internal tools like ToolSearch)' },
   { key: 'turns', label: 'Agent turns', tag: 'overhead', unit: '', decimals: 0, description: 'Conversation turns between the agent and MCP server' },
   { key: 'cost', label: 'Cost per run', tag: 'business', unit: '$', decimals: 2, description: 'USD cost of the agent run (API usage)' },
 ];
 
 function renderMetricGroup(metric) {
-  const allMeans = providerNames.map(p => providerStats.get(p)[metric.key].mean);
-  const allValues = providerNames.flatMap(p => providerStats.get(p)[metric.key].values);
+  const allValues = providerNames.flatMap(p => providerStats.get(p)[metric.key].values).filter(v => v !== null);
+  if (allValues.length === 0) return '';
   const scaleMax = metric.fixedMax ?? Math.max(...allValues, 1);
 
   let rows = '';
   for (let i = 0; i < providerNames.length; i++) {
     const name = providerNames[i];
     const s = providerStats.get(name)[metric.key];
-    const barPct = scaleMax > 0 ? (s.mean / scaleMax) * 100 : 0;
+    const validValues = s.values.filter(v => v !== null);
+    const mean = validValues.length > 0 ? validValues.reduce((a, b) => a + b, 0) / validValues.length : 0;
+    const barPct = scaleMax > 0 ? (mean / scaleMax) * 100 : 0;
     const color = COLORS[i % COLORS.length];
-    const formattedMean = metric.unit + s.mean.toFixed(metric.decimals);
+    const formattedMean = validValues.length > 0 ? metric.unit + mean.toFixed(metric.decimals) : '—';
 
     let dots = '';
-    for (const v of s.values) {
+    for (const v of validValues) {
       const dotPct = scaleMax > 0 ? (v / scaleMax) * 100 : 0;
       dots += `<span class="dot" style="left:${dotPct}%;background:${color};" title="${metric.unit}${v.toFixed(metric.decimals)}"></span>`;
     }
@@ -104,6 +110,7 @@ function renderTable() {
   const BG = ['rgba(217,119,83,0.06)', 'rgba(58,143,127,0.06)'];
 
   const cols = [
+    { key: 'quality', label: 'Quality', fmt: v => v === null ? '—' : Number.isInteger(v) ? String(v) : v.toFixed(1) },
     { key: 'toolCalls', label: 'Tool calls', fmt: v => Number.isInteger(v) ? String(v) : v.toFixed(1) },
     { key: 'turns', label: 'Turns', fmt: v => Number.isInteger(v) ? String(v) : v.toFixed(1) },
     { key: 'cost', label: 'Cost', fmt: v => `$${v.toFixed(2)}` },
@@ -141,7 +148,8 @@ function renderTable() {
   for (const col of cols) {
     for (let p = 0; p < names.length; p++) {
       const s = providerStats.get(names[p]);
-      const content = col.key === 'pass' ? '' : col.fmt(s[col.key].mean);
+      const statObj = s[col.key];
+      const content = col.key === 'pass' ? '' : !statObj || statObj.mean === null ? '—' : col.fmt(statObj.mean);
       meanRow += cell(p, content, p === 0);
     }
   }
@@ -149,10 +157,11 @@ function renderTable() {
 
   let deltaRow = `<tr class="delta-row"><td class="run-num">delta</td>`;
   for (const col of cols) {
-    if (col.key === 'pass') {
+    if (col.key === 'pass' || col.key === 'quality') {
       deltaRow += `<td colspan="${names.length}" class="delta-cell" style="border-left:2px solid #e0e0e0;"></td>`;
     } else {
-      const vals = names.map(n => providerStats.get(n)[col.key].mean);
+      const vals = names.map(n => providerStats.get(n)[col.key]?.mean).filter(v => v !== null);
+      if (vals.length < 2) { deltaRow += `<td colspan="${names.length}" class="delta-cell" style="border-left:2px solid #e0e0e0;"></td>`; continue; }
       const hi = Math.max(...vals);
       const lo = Math.min(...vals);
       const ratio = lo > 0 ? (hi / lo).toFixed(1) : '∞';
@@ -225,8 +234,8 @@ const html = `<!DOCTYPE html>
     font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
     padding: 2px 8px; border-radius: 3px; letter-spacing: 0.5px;
   }
+  .tag-baseline { background: #e8e8e8; color: #555; }
   .tag-control { background: #e8e8e8; color: #555; }
-  .tag-thesis { background: #d0e8ff; color: #1a4d80; }
   .tag-efficiency { background: #fff3cd; color: #856404; }
   .tag-overhead { background: #e2d9f3; color: #4a2d7a; }
   .tag-business { background: #d4edda; color: #155724; }

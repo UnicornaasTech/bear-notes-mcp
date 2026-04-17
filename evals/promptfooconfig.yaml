@@ -9,23 +9,10 @@ evaluateOptions:
 
 prompts:
   - |
-    I'm cleaning up my Bear notes. Find all notes mentioning Kubernetes and group them
-    by their top-level category — projects, areas, resources, or archives.
-
-    Format — label these as Kubernetes notes, not "all notes":
-
-    ## Total number of notes mentioning Kubernetes
-    - number here
-    ## Projects (N Kubernetes notes)
-    - note title
-    ## Areas (N Kubernetes notes)
-    - note title
-    ## Resources (N Kubernetes notes)
-    - note title
-    ## Archives (N Kubernetes notes)
-    - note title
-    ## Summary
-    Total Kubernetes notes found and count per category, one line.
+    Search my Bear notes for everything related to "blog" — drafts, ideas,
+    published posts, anything. Group the results by tag, listing note titles
+    under each one. Notes without tags should be listed separately. Tell me
+    the total number of notes you found.
 
 # Provider isolation:
 # - setting_sources: [] — blocks ~/.claude/settings.json and project settings
@@ -115,5 +102,14 @@ defaultTest:
         };
 
 tests:
-  - description: PARA categorization of Kubernetes notes (28 results, real Bear data)
-    vars: {}
+  - description: Blog notes grouped by tags (~49 results, real Bear data)
+    assert:
+      - type: llm-rubric
+        value: |
+          Score 10 if ALL of the following are true, otherwise score 5 or 0:
+          - Response lists Bear note titles grouped under tag names
+          - Response includes a section for untagged notes (even if empty)
+          - Response states a total count of notes found
+          Score 5 if the response answers the question but misses one of the above.
+          Score 0 if the response is empty, an error, or doesn't answer the question.
+        metric: Quality

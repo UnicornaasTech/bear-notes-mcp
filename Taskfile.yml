@@ -50,6 +50,7 @@ tasks:
 
   eval:
     desc: Run A/B eval and generate HTML report
+    interactive: true
     preconditions:
       - sh: test -n "$ANTHROPIC_API_KEY"
         msg: "ANTHROPIC_API_KEY must be exported"
@@ -59,7 +60,7 @@ tasks:
         msg: "Run 'task eval:setup' first — baseline provider needs evals/released/dist/main.js"
     cmds:
       - rm -f evals/outputs/sdk-*.log
-      - npx promptfoo@latest eval --config evals/promptfooconfig.yaml --no-cache {{.CLI_ARGS}}
+      - promptfoo eval --config evals/promptfooconfig.yaml --no-cache {{.CLI_ARGS}}
       - node evals/generate-report.js
       - open evals/outputs/report.html
 
