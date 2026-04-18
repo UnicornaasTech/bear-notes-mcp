@@ -1,6 +1,3 @@
-**Fork notice:** This is an unofficial fork of [bear-notes-mcp](https://github.com/vasylenko/bear-notes-mcp), adding just security features needed by us.
-===
-
 [![Supply Chain](https://github.com/vasylenko/bear-notes-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/vasylenko/bear-notes-mcp/actions/workflows/ci.yml)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/vasylenko/bear-notes-mcp)
 [![bear-notes-mcp MCP server](https://glama.ai/mcp/servers/vasylenko/bear-notes-mcp/badges/score.svg)](https://glama.ai/mcp/servers/vasylenko/bear-notes-mcp)
