@@ -5,7 +5,7 @@ outputPath: evals/outputs/results.json
 # Run each test multiple times per provider so the report reflects
 # variance in non-deterministic agent behavior, not a single sample.
 evaluateOptions:
-  repeat: 5
+  repeat: 10
 
 prompts:
   - |

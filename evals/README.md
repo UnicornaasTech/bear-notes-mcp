@@ -22,7 +22,7 @@ The current eval tests the tags-in-search feature (PR #100) — search results i
 ## Quick Start
 
 ```bash
-task eval:setup          # one-time: download baseline v2.10.0
+task eval:setup VERSION=2.10.0   # one-time: download baseline
 task build               # build current HEAD
 task eval                # run eval, generate report, open in browser
 ```
