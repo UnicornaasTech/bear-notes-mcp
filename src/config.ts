@@ -8,6 +8,8 @@ export const BEAR_DATABASE_PATH =
 
 export const ENABLE_NEW_NOTE_CONVENTIONS = process.env.UI_ENABLE_NEW_NOTE_CONVENTION === 'true';
 export const ENABLE_CONTENT_REPLACEMENT = process.env.UI_ENABLE_CONTENT_REPLACEMENT === 'true';
+export const ENABLE_FILE_ATTACHMENT = process.env.UI_ENABLE_FILE_ATTACHMENT === 'true';
+export const ENABLE_URL_GRAB = process.env.UI_ENABLE_URL_GRAB === 'true';
 
 export const ERROR_MESSAGES = {
   BEAR_DATABASE_NOT_FOUND:

@@ -30,7 +30,9 @@
       "env": {
         "UI_DEBUG_TOGGLE": "${user_config.debug}",
         "UI_ENABLE_NEW_NOTE_CONVENTION": "${user_config.enable_new_note_convention}",
-        "UI_ENABLE_CONTENT_REPLACEMENT": "${user_config.enable_content_replacement}"
+        "UI_ENABLE_CONTENT_REPLACEMENT": "${user_config.enable_content_replacement}",
+        "UI_ENABLE_FILE_ATTACHMENT": "${user_config.enable_file_attachment}",
+        "UI_ENABLE_URL_GRAB": "${user_config.enable_url_grab}"
       }
     }
   },
@@ -53,6 +55,20 @@
       "type": "boolean",
       "title": "Content Replacement",
       "description": "Allow replacing note content or specific sections using the bear-replace-text tool",
+      "default": false,
+      "required": false
+    },
+    "enable_file_attachment": {
+      "type": "boolean",
+      "title": "File Attachment",
+      "description": "Allow attaching files from disk to Bear notes using the bear-add-file tool. When enabled, the AI can read any file path it is given and attach it to a note.",
+      "default": false,
+      "required": false
+    },
+    "enable_url_grab": {
+      "type": "boolean",
+      "title": "URL Grabbing",
+      "description": "Allow saving web pages as Bear notes using the bear-grab-url tool. When enabled, the AI can cause your machine to fetch arbitrary URLs via Bear.",
       "default": false,
       "required": false
     }

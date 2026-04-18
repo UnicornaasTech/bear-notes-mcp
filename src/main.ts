@@ -7,7 +7,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
 
-import { APP_VERSION, ENABLE_CONTENT_REPLACEMENT, ENABLE_NEW_NOTE_CONVENTIONS } from './config.js';
+import { APP_VERSION, ENABLE_CONTENT_REPLACEMENT, ENABLE_FILE_ATTACHMENT, ENABLE_NEW_NOTE_CONVENTIONS, ENABLE_URL_GRAB } from './config.js';
 import { applyNoteConventions } from './note-conventions.js';
 import {
   cleanBase64,
@@ -462,7 +462,7 @@ Remove the header parameter to replace the full note body, or change scope to "s
   }
 );
 
-server.registerTool(
+if (ENABLE_FILE_ATTACHMENT) server.registerTool(
   'bear-add-file',
   {
     title: 'Add File to Note',
@@ -511,6 +511,12 @@ server.registerTool(
     logger.info(
       `bear-add-file called with file_path: ${file_path || 'none'}, base64_content: ${base64_content ? 'provided' : 'none'}, filename: ${filename || 'none'}, id: ${id || 'none'}, title: ${title || 'none'}`
     );
+
+    if (!ENABLE_FILE_ATTACHMENT) {
+      return createErrorResponse(`File attachment is not enabled. Do not retry — this requires a settings change by the user.
+
+To use this tool, the user must enable "File Attachment" in the Bear Notes server settings.`);
+    }
 
     if (!id && !title) {
       return createErrorResponse(
@@ -939,7 +945,7 @@ The tag has been removed from all notes. The notes themselves are not affected.`
   }
 );
 
-server.registerTool(
+if (ENABLE_URL_GRAB) server.registerTool(
   'bear-grab-url',
   {
     title: 'Grab URL as Note',
@@ -967,6 +973,12 @@ server.registerTool(
   },
   async ({ url, tags }): Promise<CallToolResult> => {
     logger.info(`bear-grab-url called with url: "${url}", tags: ${tags || 'none'}`);
+
+    if (!ENABLE_URL_GRAB) {
+      return createErrorResponse(`URL grabbing is not enabled. Do not retry — this requires a settings change by the user.
+
+To use this tool, the user must enable "URL Grabbing" in the Bear Notes server settings.`);
+    }
 
     try {
       const bearUrl = buildBearUrl('grab-url', {
