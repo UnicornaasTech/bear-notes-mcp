@@ -60,7 +60,7 @@ tasks:
         msg: "Run 'task eval:setup' first — baseline provider needs evals/released/dist/main.js"
     cmds:
       - rm -f evals/outputs/sdk-*.log
-      - promptfoo eval --config evals/promptfooconfig.yaml --no-cache {{.CLI_ARGS}}
+      - npx promptfoo eval --config evals/promptfooconfig.yaml --no-cache {{.CLI_ARGS}}
       - node evals/generate-report.js
       - open evals/outputs/report.html
 
